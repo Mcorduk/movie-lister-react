@@ -6,11 +6,7 @@ import styles from "./MovieList.module.scss";
 import { RootState } from "../store/store";
 
 const MovieList: React.FC = () => {
- 
   const movies = useSelector((state: RootState) => state.movies.movies);
-  const loading = useSelector((state: RootState) => state.movies.loading);
-  const error = useSelector((state: RootState) => state.movies.error);
-
 
   return (
     <Grid container className={styles.movieList} spacing={2}>
@@ -19,7 +15,6 @@ const MovieList: React.FC = () => {
           <MovieItem movie={movie} />
         </Grid>
       ))}
-
     </Grid>
   );
 };
