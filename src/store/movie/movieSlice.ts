@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 interface Movie {
   Title: string;
   Year: string;
@@ -32,30 +32,58 @@ const initialState: MovieState = {
   totalPages: 0,
 };
 
-interface FetchMoviesResult {
-  Search: Movie[];
-  totalResults: string;
+// interface FetchMoviesResult {
+//   Search: Movie[] | [];
+//   totalResults: string | "0";
+// }
+
+interface FetchMoviesInput {
+  searchTerm: string;
+  type?: string | null;
+  year?: string | null;
+  page: number;
+}
+
+interface OMDBError extends Error {
+  readonly Error: Error;
+  readonly Response: Response;
 }
 
 // Async thunk for fetching movies from OMDb API
-export const fetchMovies = createAsyncThunk<
-  FetchMoviesResult,
-  { searchTerm: string; type?: string; year?: string; page?: number | 1 },
-  { rejectValue: { message: string } }
->(
+export const fetchMovies = createAsyncThunk(
   "movies/fetchMovies",
-  async ({ searchTerm, type, year, page = 1 }, { rejectWithValue }) => {
+  async (
+    { searchTerm, type, year, page = 1 }: FetchMoviesInput,
+    { rejectWithValue }
+  ) => {
     try {
-      const apiKey = "YOUR_OMDB_API_KEY";
+      const apiKey = import.meta.env.VITE_OMDB_API_KEY;
       const pageSize = 10;
-      const response = await axios.get(
-        `http://www.omdbapi.com/?s=${searchTerm}&type=${type}&y=${year}&page=${page}&apikey=${apiKey}`
-      );
+      let url = `http://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=${apiKey}`;
+
+      if (type) {
+        url += `&type=${type}`;
+      }
+
+      if (year) {
+        url += `&y=${year}`;
+      }
+
+      const response = await axios.get(url);
+
+      if (response.data.Response === "False") {
+        return rejectWithValue(response.data);
+      }
+
       const totalResults = parseInt(response.data.totalResults || "0");
       const totalPages = Math.ceil(totalResults / pageSize);
       return { movies: response.data.Search || [], totalPages };
     } catch (err) {
-      return rejectWithValue({ message: err.message });
+      const error = err as AxiosError<OMDBError>;
+      if (!error.response) {
+        throw err;
+      }
+      return rejectWithValue(error.response.data);
     }
   }
 );
@@ -86,25 +114,24 @@ const movieSlice = createSlice({
       })
       .addCase(fetchMovies.fulfilled, (state, action) => {
         state.loading = false;
-        state.movies = action.payload.Search;
+        state.movies = action.payload.movies;
         state.currentPage = action.meta.arg.page || 1;
         // Calculate totalPages based on totalResults from API and the page size
-        const totalResults = parseInt(action.payload.totalResults, 10);
-        state.totalPages = Math.ceil(totalResults / 10);
+        state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchMovies.rejected, (state, action) => {
         state.loading = false;
         // Check if error response matches the API's error format
         if (action.error.message === "Network Error") {
           state.error = "Network Error: Failed to connect to the API.";
-        } else if (action.error.response?.data?.Response === "False") {
-          state.error = action.error.response.data.Error;
         } else {
-          state.error = action.error.message || "Unexpected Error"; // Default error message
+          state.error = action.error.message ?? "Something went wrong";
         }
       });
   },
 });
+
+
 
 export const { setSearchTerm, setSelectedYear, setType, setSelectedMovie } =
   movieSlice.actions;
