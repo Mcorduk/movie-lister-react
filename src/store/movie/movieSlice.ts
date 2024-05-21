@@ -8,7 +8,7 @@ interface Movie {
   Poster: string;
 }
 
-interface MovieState {
+export interface MovieState {
   movies: Movie[];
   loading: boolean;
   error: string | null;
@@ -32,12 +32,7 @@ const initialState: MovieState = {
   totalPages: 0,
 };
 
-// interface FetchMoviesResult {
-//   Search: Movie[] | [];
-//   totalResults: string | "0";
-// }
-
-interface FetchMoviesInput {
+export interface FetchMoviesInput {
   searchTerm: string;
   type?: string | null;
   year?: string | null;
@@ -116,12 +111,10 @@ const movieSlice = createSlice({
         state.loading = false;
         state.movies = action.payload.movies;
         state.currentPage = action.meta.arg.page || 1;
-        // Calculate totalPages based on totalResults from API and the page size
         state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchMovies.rejected, (state, action) => {
         state.loading = false;
-        // Check if error response matches the API's error format
         if (action.error.message === "Network Error") {
           state.error = "Network Error: Failed to connect to the API.";
         } else {
