@@ -1,8 +1,10 @@
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import FilterListOffIcon from "@mui/icons-material/FilterListOff";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
   fetchMovies,
+  setSelectedType,
   setSelectedYear,
 } from "../../../../store/movie/movieSlice";
 import styles from "./SearchBar.module.scss"; // Import styles
@@ -11,25 +13,27 @@ import TextField from "@mui/material/TextField";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setSearchTerm } from "../../../../store/movie/movieSlice";
-import { Button, ButtonGroup, Container } from "@mui/material";
+import { Container, ToggleButton, ToggleButtonGroup } from "@mui/material";
 
 const SearchBar = () => {
   const [searchTerm, setSearchTermValue] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedType, setSelectedType] = useState(""); // New state for type
-  const [showInput, setShowInput] = useState(false); // New state for toggling input
+  const [year, setYear] = useState("");
+  const [type, setType] = useState("");
+  const [showInput, setShowInput] = useState(false);
   const dispatch = useDispatch();
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     dispatch(setSearchTerm(searchTerm));
-    const yearToSend = selectedYear ? selectedYear : null; // Handle empty year
-    const typeToSend = selectedType || null; // Handle empty type (All)
+    dispatch(setSelectedYear(year));
+    dispatch(setSelectedType(type));
+    const yearToSend = year ? year : null;
+    const typeToSend = type || null;
     dispatch(fetchMovies({ searchTerm, year: yearToSend, type: typeToSend }));
   };
 
-  const handleTypeChange = (event, newType) => {
-    setSelectedType(newType);
+  const handleTypeChange = (e, newType: string) => {
+    setType(newType === "all" ? "" : newType);
   };
 
   return (
@@ -39,7 +43,7 @@ const SearchBar = () => {
           onClick={() => setShowInput(!showInput)}
           aria-label="toggle input"
         >
-          <FilterListOffIcon />
+          {showInput ? <FilterAltIcon /> : <FilterListOffIcon />}
         </IconButton>
         <Container className={styles.searchFilterBox}>
           <TextField
@@ -57,23 +61,26 @@ const SearchBar = () => {
                 label="Filter by Year (Optional)"
                 variant="outlined"
                 size="small"
-                value={selectedYear}
-                onChange={(e) => setSelectedYear(e.target.value)}
+                value={year}
+                onChange={(e) => setYear(e.target.value)}
                 fullWidth
                 className={styles.searchField}
               />
-              {/* <ButtonGroup className={styles.buttonGroup} variant="outlined" aria-label="type">
-                <Button onClick={() => handleTypeChange("", "all")}>All</Button>
-                <Button onClick={() => handleTypeChange("", "movie")}>
-                  Movie
-                </Button>
-                <Button onClick={() => handleTypeChange("", "series")}>
-                  Series
-                </Button>
-                <Button onClick={() => handleTypeChange("", "episode")}>
-                  Episode
-                </Button>
-              </ButtonGroup> */}
+              {
+                <ToggleButtonGroup
+                  className={styles.toggleButtonGroup}
+                  value={type}
+                  onChange={(event, newType) =>
+                    handleTypeChange(event, newType)
+                  }
+                  exclusive
+                >
+                  <ToggleButton value="">All</ToggleButton>
+                  <ToggleButton value="movie">Movie</ToggleButton>
+                  <ToggleButton value="series">Series</ToggleButton>
+                  <ToggleButton value="episode">Episode</ToggleButton>
+                </ToggleButtonGroup>
+              }
             </>
           )}
         </Container>
