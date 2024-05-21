@@ -7,8 +7,7 @@ import Header from "./header/Header";
 import SearchBar from "./header/searchbar/SearchBar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  // TODO: Make me useful
-  // const isMobile = useMediaQuery("(max-width: 600px)");
+
   const theme = createTheme({
     breakpoints: {
       values: {

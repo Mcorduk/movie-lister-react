@@ -4,6 +4,7 @@ import FilterListOffIcon from "@mui/icons-material/FilterListOff";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import {
   fetchMovies,
+  MovieState,
   setSelectedType,
   setSelectedYear,
 } from "../../../../store/movie/movieSlice";
@@ -14,33 +15,50 @@ import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setSearchTerm } from "../../../../store/movie/movieSlice";
 import { Container, ToggleButton, ToggleButtonGroup } from "@mui/material";
+import { ThunkDispatch } from "@reduxjs/toolkit";
+import { UnknownAction } from "redux";
 
 const SearchBar = () => {
-  const [searchTerm, setSearchTermValue] = useState("");
+  const [searchTerm, setSearchTermValue] = useState("Pokemon");
   const [year, setYear] = useState("");
-  const [type, setType] = useState("");
+  const [type, setType] = useState<"movie" | "series" | "episode" | null>(null);
   const [showInput, setShowInput] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch =
+    useDispatch<ThunkDispatch<MovieState, undefined, UnknownAction>>();
 
-  const handleSearchSubmit = (e) => {
+  const handleSearchSubmit = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     dispatch(setSearchTerm(searchTerm));
     dispatch(setSelectedYear(year));
     dispatch(setSelectedType(type));
     const yearToSend = year ? year : null;
     const typeToSend = type || null;
-    dispatch(fetchMovies({ searchTerm, year: yearToSend, type: typeToSend }));
+    dispatch(
+      fetchMovies({
+        searchTerm,
+        year: yearToSend,
+        type: typeToSend,
+        page: 1,
+      })
+    );
   };
 
-  const handleTypeChange = (e, newType: string) => {
-    setType(newType === "all" ? "" : newType);
+  const handleTypeChange = (
+    _e,
+    newType: "movie" | "series" | "episode" | "" | null
+  ) => {
+    setType(newType === "" ? null : newType);
   };
 
   return (
     <Box>
       <form onSubmit={handleSearchSubmit} className={styles.searchForm}>
         <IconButton
-          onClick={() => setShowInput(!showInput)}
+          onClick={() => {
+            setYear("");
+            setType(null);
+            setShowInput(!showInput);
+          }}
           aria-label="toggle input"
         >
           {showInput ? <FilterAltIcon /> : <FilterListOffIcon />}
@@ -70,9 +88,7 @@ const SearchBar = () => {
                 <ToggleButtonGroup
                   className={styles.toggleButtonGroup}
                   value={type}
-                  onChange={(event, newType) =>
-                    handleTypeChange(event, newType)
-                  }
+                  onChange={(e, newType) => handleTypeChange(e, newType)}
                   exclusive
                 >
                   <ToggleButton value="">All</ToggleButton>
