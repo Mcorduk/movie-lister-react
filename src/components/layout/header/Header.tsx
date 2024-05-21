@@ -1,8 +1,7 @@
 import { AppBar, Toolbar, Container, Typography } from "@mui/material";
-import SearchBar from "../SearchBar";
 import styles from "./Header.module.scss";
 
-const Header = () => {
+const Header = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppBar position="static" className={styles.appBar}>
       <Toolbar disableGutters>
@@ -15,7 +14,7 @@ const Header = () => {
           >
             Movie App
           </Typography>
-          <SearchBar />
+          {children}
         </Container>
       </Toolbar>
     </AppBar>
