@@ -1,10 +1,14 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setSearchTerm, setSelectedYear, setType } from "./movieSlice";
+import {
+  setSearchTerm,
+  setSelectedYear,
+  setType,
+} from "../../../../store/movie/movieSlice";
 import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
-import { fetchMovies } from "../../store/movie/movieSlice";
+import { fetchMovies } from "../../../../store/movie/movieSlice";
 import styles from "./SearchBar.module.scss"; // Import styles
 
 const SearchBar = () => {
@@ -15,6 +19,7 @@ const SearchBar = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+    dispatch(setSearchTerm(searchTerm));
     dispatch(fetchMovies({ searchTerm, year: selectedYear, type }));
   };
 
