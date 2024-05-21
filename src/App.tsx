@@ -4,6 +4,7 @@ import Layout from "./components/layout/Layout";
 import MovieList from "./components/MovieList";
 import "./styles/global.scss";
 import { Container } from "@mui/material";
+import MoviePagination from "./components/layout/pagination/MoviePagination";
 
 const theme = createTheme({
   breakpoints: {
@@ -24,6 +25,7 @@ const App = () => {
         {
           <Container className="wrapper">
             <MovieList />
+            <MoviePagination />
           </Container>
         }
       </Layout>
