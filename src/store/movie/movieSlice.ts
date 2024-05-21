@@ -91,10 +91,13 @@ const movieSlice = createSlice({
     setSearchTerm(state, action: PayloadAction<string>) {
       state.searchTerm = action.payload;
     },
-    setSelectedYear(state, action: PayloadAction<string>) {
+    setSelectedYear(state, action: PayloadAction<string | null>) {
       state.selectedYear = action.payload;
     },
-    setType(state, action: PayloadAction<"movie" | "series" | "episode">) {
+    setSelectedType(
+      state,
+      action: PayloadAction<"movie" | "series" | "episode" | null>
+    ) {
       state.type = action.payload;
     },
     setSelectedMovie(state, action: PayloadAction<Movie>) {
@@ -124,9 +127,11 @@ const movieSlice = createSlice({
   },
 });
 
-
-
-export const { setSearchTerm, setSelectedYear, setType, setSelectedMovie } =
-  movieSlice.actions;
+export const {
+  setSearchTerm,
+  setSelectedYear,
+  setSelectedType,
+  setSelectedMovie,
+} = movieSlice.actions;
 
 export default movieSlice.reducer;
