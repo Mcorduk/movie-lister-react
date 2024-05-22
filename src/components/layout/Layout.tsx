@@ -1,13 +1,10 @@
-// layout.tsx
 import React from "react";
-// import { useMediaQuery } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import SearchBar from "./header/searchbar/SearchBar";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-
   const theme = createTheme({
     breakpoints: {
       values: {

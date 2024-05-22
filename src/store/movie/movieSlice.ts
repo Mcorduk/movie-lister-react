@@ -92,6 +92,7 @@ export const fetchMovies = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching movie details from OMDb API
 export const fetchMovieDetails = createAsyncThunk(
   "movies/fetchMovieDetails",
   async (imdbID: string, { rejectWithValue }) => {

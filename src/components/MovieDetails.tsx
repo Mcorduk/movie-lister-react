@@ -14,6 +14,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ThunkDispatch, UnknownAction } from "@reduxjs/toolkit";
 import { ArrowBack } from "@mui/icons-material";
 import styles from "./MovieDetails.module.scss";
+
 const MovieDetails = () => {
   const { movieId: imdbID } = useParams();
   const dispatch =
@@ -30,7 +31,7 @@ const MovieDetails = () => {
   }, [dispatch, imdbID, selectedMovie]);
 
   if (!selectedMovie || selectedMovie.imdbID !== imdbID) {
-    return <div>Loading movie details...</div>; // Display loading indicator
+    return <div>Loading movie details...</div>;
   }
 
   const {
