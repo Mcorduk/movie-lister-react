@@ -98,7 +98,7 @@ export const fetchMovieDetails = createAsyncThunk(
   async (imdbID: string, { rejectWithValue }) => {
     try {
       const apiKey = import.meta.env.VITE_OMDB_API_KEY;
-      const url = `http://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`;
+      const url = `https://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`;
       const response = await axios.get(url);
 
       if (response.data.Response === "False") {

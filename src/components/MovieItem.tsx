@@ -7,6 +7,13 @@ import { Movie } from "../store/movie/movieSlice";
 const MovieItem: React.FC<{ movie: Movie }> = ({ movie }) => {
   return (
     <Card className={styles.movieItem}>
+      <Typography
+        variant="body2"
+        color="text.secondary"
+        className={styles.movieId}
+      >
+        imdbID: {movie.imdbID}
+      </Typography>
       <CardMedia
         component="img"
         height="140"
