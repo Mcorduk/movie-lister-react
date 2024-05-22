@@ -63,7 +63,7 @@ export const fetchMovies = createAsyncThunk(
     try {
       const apiKey = import.meta.env.VITE_OMDB_API_KEY;
       const pageSize = 10;
-      let url = `http://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=${apiKey}`;
+      let url = `https://www.omdbapi.com/?s=${searchTerm}&page=${page}&apikey=${apiKey}`;
 
       if (type) {
         url += `&type=${type}`;

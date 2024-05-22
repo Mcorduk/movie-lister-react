@@ -22,7 +22,7 @@ const theme = createTheme({
 const App = () => {
   return (
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
+      <BrowserRouter basename="/movie-lister-react">
         <Layout>
           <Container className="wrapper">
             <Routes>
@@ -35,10 +35,7 @@ const App = () => {
                   </>
                 }
               />
-              <Route
-                path="/movie/:movieId"
-                element={<MovieDetails/>}
-              />{" "}
+              <Route path="/movie/:movieId" element={<MovieDetails />} />{" "}
             </Routes>
           </Container>
         </Layout>

@@ -1,6 +1,6 @@
 # React Movie App
 
-
+Live Preview: https://mcorduk.github.io/movie-lister-react/
 
 **Prerequisites:**
 
@@ -34,7 +34,7 @@
    npm run start
    ```
 
-   This command will build the app for production and launch the app in your default browser at `http://localhost:8080/`.
+   This command will build the app for production and launch the app in your default browser at `http://localhost:8080/movie-lister-react/`.
    
    Head over to start using the app!
 
