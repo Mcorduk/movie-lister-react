@@ -1,11 +1,20 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios, { AxiosError } from "axios";
-interface Movie {
+export interface Movie {
   Title: string;
   Year: string;
   imdbID: string;
   Type: "movie" | "series" | "episode";
   Poster: string;
+}
+
+export interface MovieDetail extends Movie {
+  Genre: string;
+  Director: string;
+  Actors: string;
+  Plot: string;
+  Awards: string;
+  Ratings: { Source: string; Value: string }[];
 }
 
 export interface MovieState {
@@ -15,12 +24,12 @@ export interface MovieState {
   searchTerm: string;
   selectedYear: string | null;
   type: "movie" | "series" | "episode" | null;
-  selectedMovie: Movie | null;
+  selectedMovie: MovieDetail | null;
   currentPage: number;
   totalPages: number;
 }
 
-const initialState: MovieState = {
+export const initialState: MovieState = {
   movies: [],
   loading: false,
   error: null,
@@ -83,6 +92,29 @@ export const fetchMovies = createAsyncThunk(
   }
 );
 
+export const fetchMovieDetails = createAsyncThunk(
+  "movies/fetchMovieDetails",
+  async (imdbID: string, { rejectWithValue }) => {
+    try {
+      const apiKey = import.meta.env.VITE_OMDB_API_KEY;
+      const url = `http://www.omdbapi.com/?i=${imdbID}&apikey=${apiKey}`;
+      const response = await axios.get(url);
+
+      if (response.data.Response === "False") {
+        return rejectWithValue(response.data);
+      }
+
+      return response.data as MovieDetail;
+    } catch (err) {
+      const error = err as AxiosError;
+      if (!error.response) {
+        throw err;
+      }
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
+
 // Movie data slice with reducers and actions
 const movieSlice = createSlice({
   name: "movies",
@@ -100,7 +132,7 @@ const movieSlice = createSlice({
     ) {
       state.type = action.payload;
     },
-    setSelectedMovie(state, action: PayloadAction<Movie>) {
+    setSelectedMovie(state, action: PayloadAction<MovieDetail>) {
       state.selectedMovie = action.payload;
     },
   },
@@ -117,6 +149,22 @@ const movieSlice = createSlice({
         state.totalPages = action.payload.totalPages;
       })
       .addCase(fetchMovies.rejected, (state, action) => {
+        state.loading = false;
+        if (action.error.message === "Network Error") {
+          state.error = "Network Error: Failed to connect to the API.";
+        } else {
+          state.error = action.error.message ?? "Something went wrong";
+        }
+      })
+      .addCase(fetchMovieDetails.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchMovieDetails.fulfilled, (state, action) => {
+        state.loading = false;
+        state.selectedMovie = action.payload;
+      })
+      .addCase(fetchMovieDetails.rejected, (state, action) => {
         state.loading = false;
         if (action.error.message === "Network Error") {
           state.error = "Network Error: Failed to connect to the API.";
