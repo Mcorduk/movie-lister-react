@@ -26,7 +26,7 @@
 3. **Set up environment variables:** Create a `.env` file in the root of your project directory. Copy the contents of the `.env.example` file into the `.env` file. Replace `your_api_key` with your actual OMDB API key:
 
    ```env
-   OMDB_API_KEY=your_api_key
+   VITE_OMDB_API_KEY=your_api_key
    ```
 4. **Start the production preview:** Once the dependencies are installed, run the following command to start the Vite development server:
 
