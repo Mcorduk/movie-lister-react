@@ -3,14 +3,14 @@ import styles from "./Header.module.scss";
 
 const Header = ({ children }: { children: React.ReactNode }) => {
   return (
-    <AppBar position="static" className={styles.appBar}>
+    <AppBar position="static">
       <Toolbar disableGutters>
         <Container maxWidth="sm">
           <Typography
             variant="h6"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
+            className={styles.title}
           >
             Movie App
           </Typography>

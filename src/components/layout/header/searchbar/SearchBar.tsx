@@ -71,7 +71,7 @@ const SearchBar = () => {
             value={searchTerm}
             onChange={(e) => setSearchTermValue(e.target.value)}
             fullWidth
-            className={styles.searchField} // Use className instead of sx
+            className={styles.searchField}
           />
           {showInput && (
             <>
