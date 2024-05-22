@@ -1,30 +1,46 @@
-# React + TypeScript + Vite
+# React Movie App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+**Prerequisites:**
 
-## Expanding the ESLint configuration
+* **Node.js and npm (or yarn):** Download Node.js from the official website ([https://nodejs.org/en](https://nodejs.org/en)). Node.js comes bundled with npm, the Node Package Manager. Alternatively, you can use yarn as a package manager.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+**Steps:**
 
-- Configure the top-level `parserOptions` property like this:
+1. **Clone the repository:** 
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+    ```bash
+    git clone git@github.com:Mcorduk/movie-lister-react.git
+    ```
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+2. **Install dependencies:** Navigate to your project directory in the terminal and run the following command:
+
+   ```bash
+   cd movie-lister-react
+   npm install 
+   ```
+
+   This command will install all the necessary dependencies.
+   
+3. **Set up environment variables:** Create a `.env` file in the root of your project directory. Copy the contents of the `.env.example` file into the `.env` file. Replace `your_api_key` with your actual OMDB API key:
+
+   ```env
+   OMDB_API_KEY=your_api_key
+   ```
+4. **Start the production preview:** Once the dependencies are installed, run the following command to start the Vite development server:
+
+   ```bash
+   npm run start
+   ```
+
+   This command will build the app for production and launch the app in your default browser at `http://localhost:8080/`.
+   
+   Head over to start using the app!
+
+**Troubleshooting:**
+
+* If you encounter any errors during installation or running the development server, consult the documentation for Vite ([https://vitejs.dev/](https://vitejs.dev/)) or refer to the specific error messages for guidance.
+
+
+By following these steps, you should be able to successfully run this Vite React app locally. 
